@@ -1,3 +1,5 @@
+### Spotify Remote Player Auth Service
+
 ```shell
 docker run -d --restart=always \
   --name spotify-auth-service \
