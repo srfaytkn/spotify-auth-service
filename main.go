@@ -147,6 +147,10 @@ func tokenRefreshHandler(c *fiber.Ctx) error {
 	return c.Status(200).JSON(spotifyAuthResponse)
 }
 
+func notFoundHandler(c *fiber.Ctx) error {
+	return c.SendStatus(fiber.StatusNotFound)
+}
+
 func initLogger() {
 	logger, _ := zap.NewProduction()
 	zap.ReplaceGlobals(logger)
@@ -155,13 +159,15 @@ func initLogger() {
 func main() {
 	initLogger()
 
-	app := fiber.New()
+	app := fiber.New(fiber.Config{DisableStartupMessage: true})
 
 	app.Get("/health", healthHandler)
 	app.Post("/callback", tokenSwapHandler)
 	app.Post("/refresh", tokenRefreshHandler)
+	app.Use(notFoundHandler)
 
 	go func() {
+		zap.S().Info("Initializing..")
 		log.Fatal(app.Listen(SERVER_HOST))
 	}()
 
