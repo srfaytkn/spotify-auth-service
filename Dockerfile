@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM gcr.io/distroless/static-debian11:nonroot
 
 EXPOSE 8080
 
@@ -6,13 +6,8 @@ ENV CLIENT_ID ""
 ENV CLIENT_SECRET ""
 ENV REDIRECT_URI ""
 
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends ca-certificates
-
-RUN mkdir /app-container
-COPY spotify-auth-service /app-container
 WORKDIR /app-container
 
-RUN chmod +x spotify-auth-service
+COPY spotify-auth-service /app-container
 
-ENTRYPOINT ["./spotify-auth-service"]
+ENTRYPOINT ["/app-container/spotify-auth-service"]
